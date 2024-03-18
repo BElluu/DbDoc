@@ -5,17 +5,35 @@ import (
 	"fmt"
 )
 
-func FetchFunctions(DB *sql.DB) {
+type Functions struct {
+	Data []FunctionData
+}
 
+type FunctionData struct {
+	ObjectName string
+	Parameters []FunctionParameters
+}
+
+type FunctionParameters struct {
+	Name      string
+	DataType  string
+	MaxLength int64
+	IsOutput  bool
+}
+
+func FetchFunctions(DB *sql.DB) (FunctionsObject Functions) {
+	var Objects Functions
 	funtionNames, err := fetchFunctionsName(DB)
 	if err != nil {
 		fmt.Println("Error getting functions name:", err)
 		return
 	}
 	for _, name := range funtionNames {
-		fetchFuntionParameters(DB, name)
+		functions := fetchFuntionParameters(DB, name)
+		Objects.Data = append(Objects.Data, FunctionData{ObjectName: name, Parameters: functions})
+
 	}
-	//fetchFuntionParameters(DB, "fn_CommitChanges_Validator")
+	return Objects
 }
 
 func fetchFunctionsName(DB *sql.DB) ([]string, error) {
@@ -44,7 +62,6 @@ func fetchFunctionsName(DB *sql.DB) ([]string, error) {
 			fmt.Println("Error scanning row:", err)
 			return nil, err
 		}
-		fmt.Println("Function Name:", functionName)
 		functionNames = append(functionNames, functionName)
 	}
 
@@ -57,7 +74,7 @@ func fetchFunctionsName(DB *sql.DB) ([]string, error) {
 	return functionNames, nil
 }
 
-func fetchFuntionParameters(DB *sql.DB, functionName string) {
+func fetchFuntionParameters(DB *sql.DB, functionName string) (functions []FunctionParameters) {
 	query := `
         SELECT 
             p.name AS parameter_name,
@@ -93,14 +110,7 @@ func fetchFuntionParameters(DB *sql.DB, functionName string) {
 			fmt.Println("Error scanning row:", err)
 			return
 		}
-		var direction string
-		if isOutput {
-			direction = "OUTPUT"
-			functionName = "Return value"
-		} else {
-			direction = "INPUT"
-		}
-		fmt.Printf("Function: %s, Data Type: %s, Max Length: %d, Direction: %s\n", functionName, dataType, maxLength, direction)
+		functions = append(functions, FunctionParameters{Name: functionName, DataType: dataType, MaxLength: int64(maxLength), IsOutput: isOutput})
 	}
 
 	// Check for errors during iteration
@@ -108,4 +118,6 @@ func fetchFuntionParameters(DB *sql.DB, functionName string) {
 		fmt.Println("Error iterating over results:", err)
 		return
 	}
+
+	return functions
 }

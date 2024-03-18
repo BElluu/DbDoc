@@ -5,7 +5,24 @@ import (
 	"fmt"
 )
 
-func FetchProcedures(DB *sql.DB) {
+type Procedures struct {
+	Data []ProcedureData
+}
+
+type ProcedureData struct {
+	ObjectName string
+	Parameters []ProcedureParameters
+}
+
+type ProcedureParameters struct {
+	Name      string
+	DataType  string
+	MaxLength int64
+	IsOutput  bool
+}
+
+func FetchProcedures(DB *sql.DB) (ProceduresObjects Procedures) {
+	var Objects Procedures
 	procedureNames, err := fetchProceudresName(DB)
 	if err != nil {
 		fmt.Println("Error getting procedures name:", err)
@@ -13,8 +30,11 @@ func FetchProcedures(DB *sql.DB) {
 	}
 
 	for _, name := range procedureNames {
-		fetchProcedureParameters(DB, name)
+		params := fetchProcedureParameters(DB, name)
+		Objects.Data = append(Objects.Data, ProcedureData{ObjectName: name, Parameters: params})
 	}
+
+	return Objects
 }
 
 func fetchProceudresName(DB *sql.DB) ([]string, error) {
@@ -40,7 +60,6 @@ func fetchProceudresName(DB *sql.DB) ([]string, error) {
 		if err := rows.Scan(&procedureName); err != nil {
 			return nil, err
 		}
-		fmt.Println("Procedure Name:", procedureName)
 		procedureNames = append(procedureNames, procedureName)
 	}
 
@@ -53,7 +72,7 @@ func fetchProceudresName(DB *sql.DB) ([]string, error) {
 
 }
 
-func fetchProcedureParameters(DB *sql.DB, procedureName string) {
+func fetchProcedureParameters(DB *sql.DB, procedureName string) (params []ProcedureParameters) {
 	query := `
         SELECT 
             p.name AS parameter_name,
@@ -89,13 +108,7 @@ func fetchProcedureParameters(DB *sql.DB, procedureName string) {
 			fmt.Println("Error scanning row:", err)
 			return
 		}
-		var direction string
-		if isOutput {
-			direction = "OUTPUT"
-		} else {
-			direction = "INPUT"
-		}
-		fmt.Printf("Parameter: %s, Data Type: %s, Max Length: %d, Direction: %s\n", parameterName, dataType, maxLength, direction)
+		params = append(params, ProcedureParameters{Name: parameterName, DataType: dataType, MaxLength: int64(maxLength), IsOutput: isOutput})
 	}
 
 	// Check for errors during iteration
@@ -103,4 +116,5 @@ func fetchProcedureParameters(DB *sql.DB, procedureName string) {
 		fmt.Println("Error iterating over results:", err)
 		return
 	}
+	return params
 }

@@ -6,17 +6,21 @@ import (
 )
 
 func main() {
-	server := "localhost"
+	server := "DESKTOP-9REO75F\\DEV"
 	port := "1433"
 	user := "sa"
-	password := "test"
-	databaseName := "test"
+	password := "Komenda22!"
+	databaseName := "KontrolaWersji"
 
 	database.InitDb(server, user, password, databaseName, port)
 
-	//	dbdata.FetchProcedures(database.DB)
+	s := dbdata.FetchProcedures(database.DB)
+	f := dbdata.FetchFunctions(database.DB)
+
+	println(len(s.Data))
+	println(len(f.Data))
 	//	fmt.Println("-----------------")
 	//	dbdata.FetchFunctions(database.DB)
 	//	fmt.Println("--------------")
-	dbdata.FetchTables(database.DB)
+	//dbdata.FetchTables(database.DB)
 }
