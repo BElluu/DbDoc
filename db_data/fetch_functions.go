@@ -29,8 +29,8 @@ func FetchFunctions(DB *sql.DB) (FunctionsObject Functions) {
 		return
 	}
 	for _, name := range funtionNames {
-		functions := fetchFuntionParameters(DB, name)
-		Objects.Data = append(Objects.Data, FunctionData{ObjectName: name, Parameters: functions})
+		params := fetchFuntionParameters(DB, name)
+		Objects.Data = append(Objects.Data, FunctionData{ObjectName: name, Parameters: params})
 
 	}
 	return Objects
