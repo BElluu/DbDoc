@@ -14,9 +14,11 @@ func main() {
 
 	database.InitDb(server, user, password, databaseName, port)
 
-	//	dbdata.FetchProcedures(database.DB)
-	//	fmt.Println("-----------------")
-	//	dbdata.FetchFunctions(database.DB)
-	//	fmt.Println("--------------")
-	dbdata.FetchTables(database.DB)
+	s := dbdata.FetchProcedures(database.DB)
+	f := dbdata.FetchFunctions(database.DB)
+	t := dbdata.FetchTables(database.DB)
+
+	println(len(s.Data))
+	println(len(f.Data))
+	println(len(t.Data))
 }

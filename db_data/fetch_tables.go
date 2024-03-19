@@ -5,15 +5,34 @@ import (
 	"fmt"
 )
 
-func FetchTables(DB *sql.DB) {
+type Tables struct {
+	Data []TableData
+}
+
+type TableData struct {
+	ObjectName string
+	Columns    []TableColumns
+}
+
+type TableColumns struct {
+	Name       string
+	DataType   string
+	MaxLength  int64
+	IsNullable bool
+}
+
+func FetchTables(DB *sql.DB) (TablesObject Tables) {
+	var Objects Tables
 	tablesName, err := fetchTablesName(DB)
 	if err != nil {
 		fmt.Println("Error getting tables name:", err)
 		return
 	}
 	for _, name := range tablesName {
-		fetchTableColumns(DB, name)
+		columns := fetchTableColumns(DB, name)
+		Objects.Data = append(Objects.Data, TableData{ObjectName: name, Columns: columns})
 	}
+	return Objects
 }
 
 func fetchTablesName(DB *sql.DB) ([]string, error) {
@@ -41,7 +60,6 @@ func fetchTablesName(DB *sql.DB) ([]string, error) {
 			fmt.Println("Error scanning row:", err)
 			return nil, err
 		}
-		fmt.Println("Table Name:", tableName)
 		tablesNames = append(tablesNames, tableName)
 	}
 
@@ -54,7 +72,7 @@ func fetchTablesName(DB *sql.DB) ([]string, error) {
 	return tablesNames, nil
 }
 
-func fetchTableColumns(DB *sql.DB, tableName string) {
+func fetchTableColumns(DB *sql.DB, tableName string) (tables []TableColumns) {
 
 	query := `
 	SELECT 
@@ -91,13 +109,7 @@ ORDER BY
 			fmt.Println("Error scanning row:", err)
 			return
 		}
-		var is_nullable string
-		if isNullable {
-			is_nullable = "Yes"
-		} else {
-			is_nullable = "No"
-		}
-		fmt.Printf("Column: %s, Data Type: %s, Max Length: %d, Nullable: %s\n", tableName, dataType, maxLength, is_nullable)
+		tables = append(tables, TableColumns{Name: tableName, DataType: dataType, MaxLength: int64(maxLength), IsNullable: isNullable})
 	}
 
 	// Check for errors during iteration
@@ -105,4 +117,5 @@ ORDER BY
 		fmt.Println("Error iterating over results:", err)
 		return
 	}
+	return tables
 }
