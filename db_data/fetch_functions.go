@@ -104,14 +104,18 @@ func fetchFuntionParameters(DB *sql.DB, functionName string) (functions []Functi
 
 	// Iterate over the result set
 	for rows.Next() {
-		var functionName, dataType string
+		var paramName, dataType string
 		var maxLength int
 		var isOutput bool
-		if err := rows.Scan(&functionName, &dataType, &maxLength, &isOutput); err != nil {
+		if err := rows.Scan(&paramName, &dataType, &maxLength, &isOutput); err != nil {
 			fmt.Println("Error scanning row:", err)
 			return
 		}
-		functions = append(functions, FunctionParameters{Name: functionName, DataType: dataType, MaxLength: int64(maxLength), IsOutput: isOutput})
+		if paramName == "" {
+			paramName = "Return value"
+		}
+
+		functions = append(functions, FunctionParameters{Name: paramName, DataType: dataType, MaxLength: int64(maxLength), IsOutput: isOutput})
 	}
 
 	// Check for errors during iteration

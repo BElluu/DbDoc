@@ -56,6 +56,7 @@ func FillHTML(procedures dbdata.Procedures, functions dbdata.Functions, tables d
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Spis Treści</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<style>
 		#content {
 			display: flex;
@@ -110,18 +111,72 @@ func FillHTML(procedures dbdata.Procedures, functions dbdata.Functions, tables d
 			<div id="info-{{.Ident}}" class="info-item">
 				<h2>{{.ObjectName}}</h2>
 				<p>To są informacje na temat {{.ObjectName}}.</p>
+			<table class="table table-hover table-bordered table-100">
+			  <tbody>
+			  <tr>
+			    <th>Name</th>
+				<th>Data Type</th>
+				<th>Length</th>
+				<th>Nullable</th>
+			  </tr>
+			  {{range .Columns}}
+			  <tr>
+			    <th>{{.Name}}</th>
+				<th>{{.DataType}}</th>
+				<th>{{.MaxLength}}</th>
+				<th>{{.IsNullable}}</th>
+			  </tr>
+			  {{end}}
+			  </tbody>
+			</table>
 			</div>
 		{{end}}
 		{{range .Functions.Data}}
 		<div id="info-{{.Ident}}" class="info-item">
 			<h2>{{.ObjectName}}</h2>
 			<p>To są informacje na temat {{.ObjectName}}.</p>
+			<table class="table table-hover table-bordered table-100">
+			<tbody>
+			<tr>
+			  <th>Name</th>
+			  <th>Data Type</th>
+			  <th>Length</th>
+			  <th>Output</th>
+			</tr>
+			{{range .Parameters}}
+			<tr>
+			  <th>{{.Name}}</th>
+			  <th>{{.DataType}}</th>
+			  <th>{{.MaxLength}}</th>
+			  <th>{{.IsOutput}}</th>
+			</tr>
+			{{end}}
+			</tbody>
+		  </table>
 		</div>
 		{{end}}
 		{{range .Procedures.Data}}
 		<div id="info-{{.Ident}}" class="info-item">
 			<h2>{{.ObjectName}}</h2>
 			<p>To są informacje na temat {{.ObjectName}}.</p>
+			<table class="table table-hover table-bordered table-100">
+			<tbody>
+			<tr>
+			  <th>Name</th>
+			  <th>Data Type</th>
+			  <th>Length</th>
+			  <th>Nullable</th>
+			</tr>
+			{{range .Parameters}}
+			<tr>
+			  <th>{{.Name}}</th>
+			  <th>{{.DataType}}</th>
+			  <th>{{.MaxLength}}</th>
+			  <th>{{.IsOutput}}</th>
+			</tr>
+			{{end}}
+			</tbody>
+		  </table>
 		</div>
 		{{end}}
 		</div>
@@ -158,6 +213,9 @@ func FillHTML(procedures dbdata.Procedures, functions dbdata.Functions, tables d
 			}
 		}
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 	
 	</body>
 	</html>`
