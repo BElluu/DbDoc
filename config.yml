@@ -1,0 +1,5 @@
+	server=localhost
+	port=1433
+	user=sa
+	password=passwd
+	databaseName=testDb

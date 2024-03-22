@@ -12,6 +12,7 @@ type Procedures struct {
 type ProcedureData struct {
 	ObjectName string
 	Parameters []ProcedureParameters
+	Ident      int64
 }
 
 type ProcedureParameters struct {

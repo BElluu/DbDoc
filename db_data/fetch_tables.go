@@ -12,6 +12,7 @@ type Tables struct {
 type TableData struct {
 	ObjectName string
 	Columns    []TableColumns
+	Ident      int64
 }
 
 type TableColumns struct {
