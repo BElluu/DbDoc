@@ -12,6 +12,7 @@ type Functions struct {
 type FunctionData struct {
 	ObjectName string
 	Parameters []FunctionParameters
+	Ident      int64
 }
 
 type FunctionParameters struct {
