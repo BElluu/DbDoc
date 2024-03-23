@@ -3,3 +3,4 @@
 	user=sa
 	password=passwd
 	databaseName=testDb
+ 	windowsauth=no
