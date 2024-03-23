@@ -44,7 +44,7 @@ func fetchFunctionsName(DB *sql.DB) ([]string, error) {
 	query := `
 	SELECT name
 	FROM sys.objects
-	WHERE type IN ('FN', 'IF') -- FN for scalar-valued functions, IF for inline table-valued functions
+	WHERE type IN ('FN', 'IF', 'TF') -- FN for scalar-valued functions, IF for inline table-valued functions, TF for table funcs
 	ORDER BY name
     `
 
