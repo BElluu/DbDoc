@@ -14,7 +14,6 @@ type TableData struct {
 	Columns     []TableColumns
 	Indexes     []TableIndexes
 	ForeignKeys []TableForeignKeys
-	Ident       int64
 }
 
 type TableColumns struct {
