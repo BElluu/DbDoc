@@ -12,7 +12,6 @@ type Views struct {
 type ViewData struct {
 	ObjectName string
 	Columns    []ViewColumns
-	Ident      int64
 }
 
 type ViewColumns struct {

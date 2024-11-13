@@ -2,33 +2,31 @@ package config
 
 import (
 	"bufio"
-	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
 func LoadConfig(filename string) (map[string]string, error) {
 
 	//CODE MODE
-	// file, err := os.Open(filename)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// defer file.Close()
-
-	//ON REALISE MODE
-	exePath, err := os.Executable()
-	if err != nil {
-		fmt.Println("Error:", err)
-		return nil, err
-	}
-
-	file, err := os.Open(filepath.Dir(exePath) + "\\" + filename)
+	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
+
+	//ON REALISE MODE
+	// exePath, err := os.Executable()
+	// if err != nil {
+	// 	fmt.Println("Error:", err)
+	// 	return nil, err
+	// }
+
+	// file, err := os.Open(filepath.Dir(exePath) + "\\" + filename)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer file.Close()
 
 	config := make(map[string]string)
 	scanner := bufio.NewScanner(file)
